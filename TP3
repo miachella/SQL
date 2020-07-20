@@ -1,0 +1,99 @@
+-- phpMyAdmin SQL Dump
+-- version 4.9.3
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:8889
+-- Generation Time: Jul 20, 2020 at 04:34 PM
+-- Server version: 5.7.26
+-- PHP Version: 7.4.2
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Database: `compta`
+--
+CREATE DATABASE IF NOT EXISTS `compta` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `compta`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ARTICLE`
+--
+
+DROP TABLE IF EXISTS `ARTICLE`;
+CREATE TABLE IF NOT EXISTS `ARTICLE` (
+  `ID` int(10) NOT NULL,
+  `REF` varchar(13) NOT NULL,
+  `DESIGNATION` varchar(255) NOT NULL,
+  `PRIX` decimal(7,2) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `BON`
+--
+
+DROP TABLE IF EXISTS `BON`;
+CREATE TABLE IF NOT EXISTS `BON` (
+  `ID` int(10) NOT NULL,
+  `NUMERO` int(10) NOT NULL,
+  `DATE_CMDE` timestamp NOT NULL,
+  `DELAI` int(10) NOT NULL,
+  `ID_ART` int(10) NOT NULL,
+  `ID_FOU` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_FOURNISSEUR` (`ID_FOU`),
+  KEY `FK_ART` (`ID_ART`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `COMPO`
+--
+
+DROP TABLE IF EXISTS `COMPO`;
+CREATE TABLE IF NOT EXISTS `COMPO` (
+  `ID` int(10) NOT NULL,
+  `QTE` int(10) NOT NULL,
+  `ID_BON` int(10) NOT NULL,
+  `ID_ART` int(10) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_BON` (`ID_BON`),
+  KEY `FK_ARTICLE` (`ID_ART`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `FOURNISSEUR`
+--
+
+DROP TABLE IF EXISTS `FOURNISSEUR`;
+CREATE TABLE IF NOT EXISTS `FOURNISSEUR` (
+  `ID` int(10) NOT NULL,
+  `NOM` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `BON`
+--
+ALTER TABLE `BON`
+  ADD CONSTRAINT `FK_ART` FOREIGN KEY (`ID_ART`) REFERENCES `ARTICLE` (`ID`),
+  ADD CONSTRAINT `FK_FOURNISSEUR` FOREIGN KEY (`ID_FOU`) REFERENCES `FOURNISSEUR` (`ID`);
+
+--
+-- Constraints for table `COMPO`
+--
+ALTER TABLE `COMPO`
+  ADD CONSTRAINT `FK_ARTICLE` FOREIGN KEY (`ID_ART`) REFERENCES `ARTICLE` (`ID`),
+  ADD CONSTRAINT `FK_BON` FOREIGN KEY (`ID_BON`) REFERENCES `BON` (`ID`);
